@@ -1,7 +1,7 @@
 # Sorting_Algorithm
  Implementation of different sorting algorithm using Java
 
- ## O($N^2$) 级别的算法
+ ## O(N^2​) 级别的算法
  * 基础
  * 编码简单，易于实现，是一些简单情景的首选
  * 在一些特殊情况下，简单的排序算法更有效
@@ -35,10 +35,10 @@ public void sort(int arr[]){
 
 ```java
 public void sort(int[] arr){
-		for(int i = 1; i < arr.length; i++){
-				//find the right position of arr[i] in [0, i]
-				for(int j = i; j > 0 && arr[j] < arr[j - 1]; j--)
-						swap(arr, j, j - 1);
+  	for(int i = 1; i < arr.length; i++){
+      	//find the right position of arr[i] in [0, i]
+      	for(int j = i; j > 0 && arr[j] < arr[j - 1]; j--)
+          	swap(arr, j, j - 1);
     }
 }
 ```
@@ -51,18 +51,18 @@ public void sort(int[] arr){
 
 ```java
 public void sort_opt(int[] arr) {
-        for(int i = 1; i < arr.length; i++){
-            //find the right position of arr[i] in [0, i]
-            int targetItem = arr[i];
-            int j;
-            for(j = i; j > 0 && arr[j - 1] > targetItem; j--)
-                arr[j] = arr[j - 1];
-            arr[j] = targetItem;
-        }
+  	for(int i = 1; i < arr.length; i++){
+      	//find the right position of arr[i] in [0, i]
+      	int targetItem = arr[i];
+     		int j;
+      	for(j = i; j > 0 && arr[j - 1] > targetItem; j--)
+          	arr[j] = arr[j - 1];
+     		arr[j] = targetItem;
     }
+}
 ```
 
-**因为插入排序的`内层循环可提前中断`的这个特性，经典题目 *"排序一个基本有序的数组用哪种排序?"*的答案就是: `插入排序`，因为只要找到插入位置就停止当前循环，这是很快的。**
+** 因为插入排序的`内层循环可提前中断`的这个特性，经典题目 *"排序一个基本有序的数组用哪种排序?"*的答案就是: `插入排序`，因为只要找到插入位置就停止当前循环，这是很快的。**
 
 ```java
 int[] arr_1 = helper.generateNearlyOrderedArray(10000, 100);
