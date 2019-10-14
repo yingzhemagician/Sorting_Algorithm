@@ -1,5 +1,6 @@
 public class QuickSort extends SortingAlgorithm{
     @Override
+    public void sort(int[] arr, String optimizeType) {
         if(optimizeType.equals("randomIdx"))
             quickSort_randomIdx(arr, 0, arr.length - 1);
         else
