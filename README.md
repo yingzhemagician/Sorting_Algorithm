@@ -76,3 +76,127 @@ time cost for algorithm class InsertionSort optimized is : 8ms
 
 实际工作中很多时候也用插入排序，因为实际数据很可能已经基本有序。
 
+
+
+## O(N*logN) 级别的算法
+|               | N^2           | N*logN        | faster
+| ------------- | ------------- | ------------- | -------------
+| N = 10        | 100           | 33            | 3
+| N = 100       | 10000         | 664           | 15
+| N = 1000      | 10^6          | 9966          | 100
+| N = 10000     | 10^8          | 132877        | 753
+| N = 100000    | 10^10         | 1660964       | 6020
+
+### Merge Sort
+提高了时间，但是用了额外的空间，因为归并过程中开辟了一个新的临时数组
+
+#### 递归（自顶向下） 未优化版
+
+merge的过程中，新建一个tempArr然后将[l, r]区间的元素复制过去，然后arr内原位置就填上排好序的结果
+
+```java
+public void sort(int[] arr){
+  	mergeSort(arr, 0, arr.length - 1);
+}
+
+//sort arr[l...r]
+private void mergeSort(int[] arr, int l, int r){
+  	if(l >= r)
+      return;
+
+  	int mid = l + (r - l)/2;
+  	mergeSort(arr, l, mid);
+  	mergeSort(arr, mid + 1, r);
+  	merge(arr, l, mid, r);
+}
+
+private void merge(int[] arr, int l, int mid, int r){
+    int[] tempArr = new int[r - l + 1];
+    for(int i = l; i <= r; i++)
+      tempArr[i - l] = arr[i];
+
+    int i = l, j = mid + 1;
+    for(int k = l; k <= r; k++){
+      if(i > mid){
+        arr[k] = tempArr[j - l];
+        j++;
+      }
+      else if(j > r){
+        arr[k] = tempArr[i - l];
+        i++;
+      }
+      else if(tempArr[i - l] < tempArr[j - l]){
+        arr[k] = tempArr[i - l];
+        i++;
+      }
+      else {
+        arr[k] = tempArr[j - l];
+        j++;
+      }
+    }
+}
+```
+
+
+
+#### 递归 （自顶向下）优化版
+
+**有两点优化**
+
+1. 两个mergeSort结束 后，如果左半部分已经完全小于右半部分，就不用再merge了。
+2. 当[l...r]区间少于15个元素时，大概率已经是基本有序的，此时借用插入排序
+
+```java
+public void sort_opt(int[] arr) {
+  	mergeSort_opt(arr, 0, arr.length - 1);
+}
+
+private void mergeSort_opt(int[] arr, int l, int r){
+  	//1st optimization
+  	if(r - l <= 15){
+    	InsertionSort insertionSort = new InsertionSort();
+    	insertionSort.sortPartOfArray(arr, l, r);
+    	return;
+  	}
+
+  	int mid = l + (r - l)/2;
+  	mergeSort_opt(arr, l, mid);
+  	mergeSort_opt(arr, mid + 1, r);
+  	//2nd optimization
+  	//if left part is smaller than right part, don't need to merge
+  	if(arr[mid] > arr[mid + 1])
+    	merge(arr, l, mid, r);
+}
+```
+
+
+
+#### 迭代 （自底向上）未优化版
+
+相当于每次按照一个`windowSize`来切分数组，也就是
+
+* 第一次按照windowSize=1来切分，然后每两个window执行merge；
+
+* 第二次按照windowSize=2来切分，然后每两个window执行merge；
+
+* 第三次按照windowSize=4来切分，然后每两个window执行merge；
+
+  ....
+
+* 按照windowSize = 2 * windowSize来切分
+
+
+
+再每一次切分里，每个窗口大小是windowSize，将连续的两个窗口merge。因此，i是第一个窗口的起始，i每次循环要增加（跳过）2个windowSize。将`arr[i...i+sz-1]` 和 `arr[i+sz...i+2*sz-1]`合并，但对于末尾的两个数组合并时有问题，因此在内层循环中，i的有效条件是`i + windowSize < arr.length;`也就是至少要保证左半部分存在，右半部分可能不够或者不存在，这种情况，只要把右半部分的末尾设为arr.length就行了，也就是`Math.min(i+2*windowSize-1, arr.length-1)`
+
+```java
+public void mergeSortBottomUp(int[] arr){
+		for(int windowSize = 1; windowSize < arr.length; windowSize += windowSize){
+				for(int i = 0; i + windowSize < arr.length; i += 2*windowSize){
+						//merge arr[i...i+sz-1] and arr[i+sz...i+2*sz-1]
+						merge(arr, i, i+windowSize-1, Math.min(i+2*windowSize-1, arr.length-1));
+        }
+    }
+}
+```
+

@@ -24,4 +24,14 @@ public class InsertionSort extends SortingAlgorithm {
             arr[j] = targetItem;
         }
     }
+
+    public void sortPartOfArray(int[] arr, int l, int r){
+        for(int i = l + 1; i <= r; i++){
+            int targetItem = arr[i];
+            int j;
+            for(j = i; j > l && arr[j - 1] > targetItem; j--)
+                arr[j] = arr[j - 1];
+            arr[j] = targetItem;
+        }
+    }
 }
