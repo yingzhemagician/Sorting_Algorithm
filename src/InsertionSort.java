@@ -1,5 +1,13 @@
 public class InsertionSort extends SortingAlgorithm {
-    public void sort(int[] arr){
+    @Override
+    public void sort(int[] arr, String optimizeType) {
+        if(optimizeType.equals("reduceCopy"))
+            insertionSort_reduceCopy(arr);
+        else
+            insertionSort(arr);
+    }
+
+    public void insertionSort(int[] arr){
         for(int i = 1; i < arr.length; i++){
             //find the right position of arr[i] in [0, i]
             for(int j = i; j > 0 && arr[j] < arr[j - 1]; j--)
@@ -13,8 +21,7 @@ public class InsertionSort extends SortingAlgorithm {
         }
     }
 
-    @Override
-    public void sort_opt(int[] arr) {
+    public void insertionSort_reduceCopy(int[] arr) {
         for(int i = 1; i < arr.length; i++){
             //find the right position of arr[i] in [0, i]
             int targetItem = arr[i];

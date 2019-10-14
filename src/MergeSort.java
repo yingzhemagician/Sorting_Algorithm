@@ -1,6 +1,12 @@
 public class MergeSort extends SortingAlgorithm{
-    public void sort(int[] arr){
-        mergeSort(arr, 0, arr.length - 1);
+    @Override
+    public void sort(int[] arr, String optimizeType) {
+        if(optimizeType.equals("reduceMerge")){
+            mergeSort_reduceMerge(arr, 0, arr.length - 1);
+        }else if(optimizeType.equals("iterative"))
+            mergeSortBottomUp(arr);
+        else
+            mergeSort(arr, 0, arr.length - 1);
     }
 
     //sort arr[l...r]
@@ -40,12 +46,7 @@ public class MergeSort extends SortingAlgorithm{
         }
     }
 
-    @Override
-    public void sort_opt(int[] arr) {
-        mergeSort_opt(arr, 0, arr.length - 1);
-    }
-
-    private void mergeSort_opt(int[] arr, int l, int r){
+    private void mergeSort_reduceMerge(int[] arr, int l, int r){
         //1st optimization
         if(r - l <= 15){
             InsertionSort insertionSort = new InsertionSort();
@@ -54,8 +55,8 @@ public class MergeSort extends SortingAlgorithm{
         }
 
         int mid = l + (r - l)/2;
-        mergeSort_opt(arr, l, mid);
-        mergeSort_opt(arr, mid + 1, r);
+        mergeSort_reduceMerge(arr, l, mid);
+        mergeSort_reduceMerge(arr, mid + 1, r);
         //2nd optimization
         //if left part is smaller than right part, don't need to merge
         if(arr[mid] > arr[mid + 1])

@@ -1,6 +1,10 @@
 public class SelectionSort extends SortingAlgorithm {
     @Override
-    public void sort(int arr[]){
+    public void sort(int arr[], String optimizeType){
+        selectionSort(arr);
+    }
+
+    private void selectionSort(int arr[]){
         for(int i = 0; i < arr.length; i++){
             //find the min item in [i, arr.length)
             int minIndex = i;
@@ -10,10 +14,5 @@ public class SelectionSort extends SortingAlgorithm {
             }
             swap(arr, i, minIndex);
         }
-    }
-
-    @Override
-    public void sort_opt(int[] arr) {
-        //no optimization
     }
 }

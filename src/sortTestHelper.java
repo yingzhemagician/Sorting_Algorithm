@@ -41,18 +41,16 @@ public class sortTestHelper {
         return true;
     }
 
-    public void testSort(int[] arr, ISortingAlgorithm algorithm, String opt){
+    public void testSort(int[] arr, ISortingAlgorithm algorithm, String optimizeType){
+        int[] arr_copy = copyIntArray(arr);
         long startTime = System.currentTimeMillis();
-        if(opt.equals("normal"))
-            algorithm.sort(arr);
-        else if(opt.equals("optimized"))
-            algorithm.sort_opt(arr);
+        algorithm.sort(arr_copy, optimizeType);
         long endTime = System.currentTimeMillis();
 
-        printArray(arr);
-        assert isSorted(arr) : "not sorted";
+//        printArray(arr);
+        assert isSorted(arr_copy) : "not sorted";
 
-        System.out.println("time cost for algorithm " + algorithm.getClass() + " " + opt + " is : " + (endTime-startTime) + "ms");
+        System.out.println("time cost for algorithm " + algorithm.getClass() + " " + optimizeType + " is : " + (endTime-startTime) + "ms");
     }
 
     public void printArray(int[] arr){
@@ -63,16 +61,20 @@ public class sortTestHelper {
 
     public static void main(String[] args) {
         sortTestHelper helper = new sortTestHelper();
-        int[] arr_1 = helper.generateRandomArray(5000, 1, 100000);
-//        int[] arr_1 = helper.generateNearlyOrderedArray(50000, 10);
-        int[] arr_2 = helper.copyIntArray(arr_1);
-        int[] arr_3 = helper.copyIntArray(arr_1);
-        int[] arr_4 = helper.copyIntArray(arr_1);
+        int[] arr = helper.generateRandomArray(100000, 1, 1000000);
+//        int[] arr = helper.generateNearlyOrderedArray(50000, 10);
 
-        helper.testSort(arr_1, new SelectionSort(), "normal");
-        helper.testSort(arr_2, new InsertionSort(), "optimized");
-        helper.testSort(arr_3, new MergeSort(), "normal");
-        helper.testSort(arr_4, new MergeSort(), "optimized");
+        helper.testSort(arr, new SelectionSort(), "noOptimize");
+
+        helper.testSort(arr, new InsertionSort(), "noOptimize");
+        helper.testSort(arr, new InsertionSort(), "reduceCopy");
+
+        helper.testSort(arr, new MergeSort(), "noOptimize");
+        helper.testSort(arr, new MergeSort(), "reduceMerge");
+        helper.testSort(arr, new MergeSort(), "iterative");
+
+        helper.testSort(arr, new QuickSort(), "noOptimize");
+        helper.testSort(arr, new MergeSort(), "randomIdx");
 
     }
 }
